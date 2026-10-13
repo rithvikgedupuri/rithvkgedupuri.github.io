@@ -96,6 +96,9 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
         }
 
         .game-card {
@@ -162,7 +165,6 @@
             background: var(--accent-hover);
         }
 
-        /* Results & Reviews Display */
         #quiz-result {
             margin-top: 15px;
             font-weight: bold;
@@ -191,31 +193,15 @@
             <p>Your interactive hub for top games & community reviews!</p>
         </header>
 
-        <!-- SEARCH & FILTER SECTION WITH UI BUTTON -->
+        <!-- SEARCH & FILTER SECTION -->
         <section>
-            <h2>🔍 Search Games</h2>
+            <h2>🔍 Search Games Database</h2>
             <div class="search-container">
-                <input type="text" id="searchInput" class="search-box" placeholder="Type a game (e.g. Zelda)...">
+                <input type="text" id="searchInput" class="search-box" placeholder="Search Minecraft, Roblox, Among Us...">
                 <button onclick="filterGames()" style="width: auto;">Search</button>
             </div>
-            <div id="gameGrid" class="game-grid">
-                <div class="game-card" data-genre="Open World">
-                    <h3>Zelda: Tears of the Kingdom</h3>
-                    <span>Open World / Adventure</span>
-                </div>
-                <div class="game-card" data-genre="Action RPG">
-                    <h3>Cyber Odyssey</h3>
-                    <span>Action RPG</span>
-                </div>
-                <div class="game-card" data-genre="Strategy">
-                    <h3>Galaxy Command</h3>
-                    <span>Strategy</span>
-                </div>
-                <div class="game-card" data-genre="Cozy Puzzle">
-                    <h3>Island Builder</h3>
-                    <span>Cozy Puzzle</span>
-                </div>
-            </div>
+            <!-- Dynamically populated game grid -->
+            <div id="gameGrid" class="game-grid"></div>
         </section>
 
         <!-- QUIZ SECTION -->
@@ -223,10 +209,10 @@
             <h2>🎮 Game Finder Quiz</h2>
             <label for="genreSelect">Choose your favorite genre:</label>
             <select id="genreSelect">
+                <option value="Sandbox">Sandbox & Survival</option>
                 <option value="Open World">Open World / Adventure</option>
-                <option value="Action">Action & Adventure</option>
-                <option value="Strategy">Strategy & Tactics</option>
-                <option value="Cozy">Cozy & Puzzle</option>
+                <option value="Action">Action & Shooter</option>
+                <option value="Party">Party & Multiplayer</option>
             </select>
             <button onclick="recommendGame()">Find My Game!</button>
             <div id="quiz-result"></div>
@@ -247,8 +233,8 @@
                 <h3>Recent Reviews:</h3>
                 <div id="reviewList">
                     <div class="review-item">
-                        <strong>Zelda: Tears of the Kingdom</strong>
-                        <p>Absolute masterpiece of an open world!</p>
+                        <strong>Minecraft</strong>
+                        <p>Infinite creativity and survival fun!</p>
                     </div>
                 </div>
             </div>
@@ -256,28 +242,74 @@
     </div>
 
     <script>
-        // Search Function triggered by the button
+        // Expanded Game Database Array featuring Minecraft, Roblox, Among Us + 20 popular games
+        const gamesDatabase = [
+            { title: "Minecraft", genre: "Sandbox / Survival" },
+            { title: "Roblox", genre: "Platform / Sandbox" },
+            { title: "Among Us", genre: "Party / Deduction" },
+            { title: "Fortnite", genre: "Battle Royale" },
+            { title: "Valorant", genre: "Tactical Shooter" },
+            { title: "Zelda: Tears of the Kingdom", genre: "Open World / Adventure" },
+            { title: "Grand Theft Auto V", genre: "Open World / Action" },
+            { title: "Call of Duty: Warzone", genre: "Battle Royale / FPS" },
+            { title: "Counter-Strike 2", genre: "Tactical Shooter" },
+            { title: "League of Legends", genre: "MOBA" },
+            { title: "Apex Legends", genre: "FPS Shooter" },
+            { title: "Rocket League", genre: "Sports / Action" },
+            { title: "Fall Guys", genre: "Party / Platformer" },
+            { title: "Terraria", genre: "Sandbox / Adventure" },
+            { title: "Stardew Valley", genre: "Cozy Simulation" },
+            { title: "Genshin Impact", genre: "Action RPG" },
+            { title: "Elden Ring", genre: "Action RPG" },
+            { title: "Baldur's Gate 3", genre: "RPG / Strategy" },
+            { title: "EA Sports FC 24", genre: "Sports" },
+            { title: "Super Smash Bros. Ultimate", genre: "Fighting / Party" },
+            { title: "Mario Kart 8 Deluxe", genre: "Racing / Party" },
+            { title: "Animal Crossing: New Horizons", genre: "Cozy Simulation" },
+            { title: "Cyberpunk 2077", genre: "Action RPG" },
+            { title: "Overwatch 2", genre: "Hero Shooter" },
+            { title: "Portal 2", genre: "Puzzle / Adventure" },
+            { title: "Undertale", genre: "Indie RPG" },
+            { title: "Pokemon Scarlet and Violet", genre: "RPG / Adventure" },
+            { title: "Team Fortress 2", genre: "Hero Shooter" },
+            { title: "Hades", genre: "Action / Roguelike" },
+            { title: "Melatonin", genre: "Cozy Rhythm" },
+            { title: "Subnautica", genre: "Survival / Exploration" }
+        ];
+
+        // Function to display games on the page
+        function displayGames(gamesArray) {
+            let grid = document.getElementById('gameGrid');
+            grid.innerHTML = "";
+
+            if (gamesArray.length === 0) {
+                grid.innerHTML = "<p style='color: var(--text-muted);'>No games found matching your search.</p>";
+                return;
+            }
+
+            gamesArray.forEach(game => {
+                let card = document.createElement('div');
+                card.className = 'game-card';
+                card.innerHTML = `<h3>${game.title}</h3><span>${game.genre}</span>`;
+                grid.appendChild(card);
+            });
+        }
+
+        // Search Function triggered by button
         function filterGames() {
             let input = document.getElementById('searchInput').value.toLowerCase();
-            let cards = document.getElementsByClassName('game-card');
-
-            for (let i = 0; i < cards.length; i++) {
-                let title = cards[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
-                let genre = cards[i].getElementsByTagName('span')[0].innerText.toLowerCase();
-                
-                if (title.includes(input) || genre.includes(input)) {
-                    cards[i].style.display = "";
-                } else {
-                    cards[i].style.display = "none";
-                }
-            }
+            let filtered = gamesDatabase.filter(game => 
+                game.title.toLowerCase().includes(input) || 
+                game.genre.toLowerCase().includes(input)
+            );
+            displayGames(filtered);
         }
 
         // Quiz Recommendation Logic
         function recommendGame() {
             let genre = document.getElementById('genreSelect').value;
             let resultDiv = document.getElementById('quiz-result');
-            resultDiv.innerText = "Top pick for " + genre + "! Check the search list above.";
+            resultDiv.innerText = "Showing top picks for " + genre + " in the database above!";
         }
 
         // Review Submission Logic
@@ -300,6 +332,11 @@
             document.getElementById('gameTitle').value = "";
             document.getElementById('reviewText').value = "";
         }
+
+        // Initial load to show games when page opens
+        window.onload = function() {
+            displayGames(gamesDatabase);
+        };
     </script>
 </body>
 </html>
