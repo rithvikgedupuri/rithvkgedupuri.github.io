@@ -197,7 +197,7 @@
         <section>
             <h2>🔍 Search Games Database</h2>
             <div class="search-container">
-                <input type="text" id="searchInput" class="search-box" placeholder="Search Minecraft, Roblox, Among Us...">
+                <input type="text" id="searchInput" class="search-box" placeholder="Search Minecraft, Roblox, Horror, Racing...">
                 <button onclick="filterGames()" style="width: auto;">Search</button>
             </div>
             <!-- Dynamically populated game grid -->
@@ -213,6 +213,9 @@
                 <option value="Open World">Open World / Adventure</option>
                 <option value="Action">Action & Shooter</option>
                 <option value="Party">Party & Multiplayer</option>
+                <option value="Horror">Horror & Survival</option>
+                <option value="Fighting">Fighting & Arcade</option>
+                <option value="Racing">Racing & Sports</option>
             </select>
             <button onclick="recommendGame()">Find My Game!</button>
             <div id="quiz-result"></div>
@@ -242,7 +245,7 @@
     </div>
 
     <script>
-        // Expanded Game Database Array featuring Minecraft, Roblox, Among Us + 20 popular games
+        // Full Game Database Array
         const gamesDatabase = [
             { title: "Minecraft", genre: "Sandbox / Survival" },
             { title: "Roblox", genre: "Platform / Sandbox" },
@@ -274,7 +277,17 @@
             { title: "Team Fortress 2", genre: "Hero Shooter" },
             { title: "Hades", genre: "Action / Roguelike" },
             { title: "Melatonin", genre: "Cozy Rhythm" },
-            { title: "Subnautica", genre: "Survival / Exploration" }
+            { title: "Subnautica", genre: "Survival / Exploration" },
+            { title: "Phasmophobia", genre: "Horror & Survival" },
+            { title: "Dead by Daylight", genre: "Horror & Survival" },
+            { title: "Resident Evil 4", genre: "Horror & Survival" },
+            { title: "Mortal Kombat 1", genre: "Fighting & Arcade" },
+            { title: "Street Fighter 6", genre: "Fighting & Arcade" },
+            { title: "Tekken 8", genre: "Fighting & Arcade" },
+            { title: "Forza Horizon 5", genre: "Racing & Sports" },
+            { title: "Gran Turismo 7", genre: "Racing & Sports" },
+            { title: "Need for Speed Unbound", genre: "Racing & Sports" },
+            { title: "The Last of Us Part I", genre: "Horror & Survival" }
         ];
 
         // Function to display games on the page
