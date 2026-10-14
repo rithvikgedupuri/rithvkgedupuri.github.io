@@ -197,7 +197,7 @@
         <section>
             <h2>🔍 Search Games Database</h2>
             <div class="search-container">
-                <input type="text" id="searchInput" class="search-box" placeholder="Search Minecraft, Roblox, Horror, Racing...">
+                <input type="text" id="searchInput" class="search-box" placeholder="Search PUBG, Minecraft, Roblox, FC Mobile...">
                 <button onclick="filterGames()" style="width: auto;">Search</button>
             </div>
             <!-- Dynamically populated game grid -->
@@ -213,12 +213,27 @@
                 <option value="Open World">Open World / Adventure</option>
                 <option value="Action">Action & Shooter</option>
                 <option value="Party">Party & Multiplayer</option>
+                <option value="Mobile">Mobile & Sports</option>
                 <option value="Horror">Horror & Survival</option>
                 <option value="Fighting">Fighting & Arcade</option>
                 <option value="Racing">Racing & Sports</option>
             </select>
             <button onclick="recommendGame()">Find My Game!</button>
             <div id="quiz-result"></div>
+        </section>
+
+        <!-- TOP 5 GAME LIST SECTION -->
+        <section>
+            <h2>🏆 My Top 5 Games of the Year</h2>
+            <p style="color: var(--text-muted); margin-bottom: 15px;">Here are my absolute favorite games right now and exactly why you should play them:</p>
+            
+            <ol style="font-size: 1rem; line-height: 1.8; color: var(--text-main); padding-left: 20px;">
+              <li style="margin-bottom: 8px;">🚀 <strong>PUBG Mobile</strong> - Intense battle royale survival gameplay with friends!</li>
+              <li style="margin-bottom: 8px;">🧱 <strong>Minecraft</strong> - Endless building options and infinite sandbox exploration.</li>
+              <li style="margin-bottom: 8px;">👑 <strong>Roblox</strong> - Tons of player-made minigames to try out.</li>
+              <li style="margin-bottom: 8px;">⚽ <strong>EA Sports FC Mobile</strong> - Build your dream team and dominate competitive matches!</li>
+              <li>👾 <strong>Among Us</strong> - Spot the imposter before it's too late!</li>
+            </ol>
         </section>
 
         <!-- REVIEW SUBMISSION SECTION -->
@@ -245,10 +260,12 @@
     </div>
 
     <script>
-        // Full Game Database Array
+        // Game Database Array
         const gamesDatabase = [
+            { title: "PUBG Mobile", genre: "Battle Royale / Shooter" },
             { title: "Minecraft", genre: "Sandbox / Survival" },
             { title: "Roblox", genre: "Platform / Sandbox" },
+            { title: "EA Sports FC Mobile", genre: "Mobile / Sports" },
             { title: "Among Us", genre: "Party / Deduction" },
             { title: "Fortnite", genre: "Battle Royale" },
             { title: "Valorant", genre: "Tactical Shooter" },
