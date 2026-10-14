@@ -222,19 +222,22 @@
             <div id="quiz-result"></div>
         </section>
 
-        <!-- TOP 5 GAME LIST SECTION -->
+        <!-- Start of Top 5 Game List -->
         <section>
+            <hr style="margin: 10px 0 20px 0; border: 1px solid var(--border-color);">
+
             <h2>🏆 My Top 5 Games of the Year</h2>
             <p style="color: var(--text-muted); margin-bottom: 15px;">Here are my absolute favorite games right now and exactly why you should play them:</p>
-            
-            <ol style="font-size: 1rem; line-height: 1.8; color: var(--text-main); padding-left: 20px;">
-              <li style="margin-bottom: 8px;">🚀 <strong>PUBG Mobile</strong> - Intense battle royale survival gameplay with friends!</li>
-              <li style="margin-bottom: 8px;">🧱 <strong>Minecraft</strong> - Endless building options and infinite sandbox exploration.</li>
-              <li style="margin-bottom: 8px;">👑 <strong>Roblox</strong> - Tons of player-made minigames to try out.</li>
-              <li style="margin-bottom: 8px;">⚽ <strong>EA Sports FC Mobile</strong> - Build your dream team and dominate competitive matches!</li>
-              <li>👾 <strong>Among Us</strong> - Spot the imposter before it's too late!</li>
+
+            <ol style="font-size: 16px; line-height: 1.8; color: var(--text-main); padding-left: 20px;">
+              <li>🚀 <strong>PUBG Mobile</strong> - Intense battle royale survival gameplay with friends!</li>
+              <li>🧱 <strong>Minecraft</strong> - Endless building options and infinite sandbox exploration.</li>
+              <li>👑 <strong>Roblox</strong> - Millions of custom player-created minigames to try out.</li>
+              <li>🏎️ <strong>EA Sports FC Mobile</strong> - Build your ultimate dream team and rank up in Head-to-Head mode!</li>
+              <li>👾 <strong>Among Us</strong> - Keep your eyes open and spot the imposter before it's too late!</li>
             </ol>
         </section>
+        <!-- End of Top 5 Game List -->
 
         <!-- REVIEW SUBMISSION SECTION -->
         <section>
@@ -262,39 +265,38 @@
     <script>
         // Game Database Array
         const gamesDatabase = [
-            { title: "PUBG Mobile", genre: "Battle Royale / Shooter" },
-            { title: "Minecraft", genre: "Sandbox / Survival" },
-            { title: "Roblox", genre: "Platform / Sandbox" },
-            { title: "EA Sports FC Mobile", genre: "Mobile / Sports" },
-            { title: "Among Us", genre: "Party / Deduction" },
-            { title: "Fortnite", genre: "Battle Royale" },
-            { title: "Valorant", genre: "Tactical Shooter" },
+            { title: "PUBG Mobile", genre: "Action & Shooter" },
+            { title: "Minecraft", genre: "Sandbox & Survival" },
+            { title: "Roblox", genre: "Sandbox & Survival" },
+            { title: "EA Sports FC Mobile", genre: "Mobile & Sports" },
+            { title: "Among Us", genre: "Party & Multiplayer" },
+            { title: "Fortnite", genre: "Action & Shooter" },
+            { title: "Valorant", genre: "Action & Shooter" },
             { title: "Zelda: Tears of the Kingdom", genre: "Open World / Adventure" },
             { title: "Grand Theft Auto V", genre: "Open World / Action" },
-            { title: "Call of Duty: Warzone", genre: "Battle Royale / FPS" },
-            { title: "Counter-Strike 2", genre: "Tactical Shooter" },
-            { title: "League of Legends", genre: "MOBA" },
-            { title: "Apex Legends", genre: "FPS Shooter" },
-            { title: "Rocket League", genre: "Sports / Action" },
-            { title: "Fall Guys", genre: "Party / Platformer" },
-            { title: "Terraria", genre: "Sandbox / Adventure" },
-            { title: "Stardew Valley", genre: "Cozy Simulation" },
-            { title: "Genshin Impact", genre: "Action RPG" },
-            { title: "Elden Ring", genre: "Action RPG" },
-            { title: "Baldur's Gate 3", genre: "RPG / Strategy" },
-            { title: "EA Sports FC 24", genre: "Sports" },
-            { title: "Super Smash Bros. Ultimate", genre: "Fighting / Party" },
-            { title: "Mario Kart 8 Deluxe", genre: "Racing / Party" },
-            { title: "Animal Crossing: New Horizons", genre: "Cozy Simulation" },
-            { title: "Cyberpunk 2077", genre: "Action RPG" },
-            { title: "Overwatch 2", genre: "Hero Shooter" },
-            { title: "Portal 2", genre: "Puzzle / Adventure" },
-            { title: "Undertale", genre: "Indie RPG" },
-            { title: "Pokemon Scarlet and Violet", genre: "RPG / Adventure" },
-            { title: "Team Fortress 2", genre: "Hero Shooter" },
-            { title: "Hades", genre: "Action / Roguelike" },
-            { title: "Melatonin", genre: "Cozy Rhythm" },
-            { title: "Subnautica", genre: "Survival / Exploration" },
+            { title: "Call of Duty: Warzone", genre: "Action & Shooter" },
+            { title: "Counter-Strike 2", genre: "Action & Shooter" },
+            { title: "League of Legends", genre: "Action & Strategy" },
+            { title: "Apex Legends", genre: "Action & Shooter" },
+            { title: "Rocket League", genre: "Racing & Sports" },
+            { title: "Fall Guys", genre: "Party & Multiplayer" },
+            { title: "Terraria", genre: "Sandbox & Survival" },
+            { title: "Stardew Valley", genre: "Sandbox & Survival" },
+            { title: "Genshin Impact", genre: "Open World / Adventure" },
+            { title: "Elden Ring", genre: "Open World / Adventure" },
+            { title: "Baldur's Gate 3", genre: "Open World / Adventure" },
+            { title: "EA Sports FC 24", genre: "Racing & Sports" },
+            { title: "Super Smash Bros. Ultimate", genre: "Fighting & Arcade" },
+            { title: "Mario Kart 8 Deluxe", genre: "Racing & Sports" },
+            { title: "Animal Crossing: New Horizons", genre: "Sandbox & Survival" },
+            { title: "Cyberpunk 2077", genre: "Open World / Adventure" },
+            { title: "Overwatch 2", genre: "Action & Shooter" },
+            { title: "Portal 2", genre: "Party & Multiplayer" },
+            { title: "Undertale", genre: "Open World / Adventure" },
+            { title: "Pokemon Scarlet and Violet", genre: "Open World / Adventure" },
+            { title: "Team Fortress 2", genre: "Action & Shooter" },
+            { title: "Hades", genre: "Action & Shooter" },
+            { title: "Subnautica", genre: "Horror & Survival" },
             { title: "Phasmophobia", genre: "Horror & Survival" },
             { title: "Dead by Daylight", genre: "Horror & Survival" },
             { title: "Resident Evil 4", genre: "Horror & Survival" },
