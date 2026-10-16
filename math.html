@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Attack</title>
+    <style>
+        body { background-color: #121214; color: #ffffff; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 50px 20px; }
+        .game-box { background-color: #1e1e24; border: 2px solid #03dac6; border-radius: 12px; padding: 40px; max-width: 400px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .question { font-size: 2.5rem; margin: 20px 0; font-weight: bold; color: #6200ee; background: #fff; padding: 10px; border-radius: 8px; }
+        input { font-size: 1.5rem; padding: 10px; width: 60%; text-align: center; border-radius: 6px; border: none; margin-bottom: 20px; color: #000; }
+        .btn { background-color: #03dac6; color: #121214; border: none; padding: 12px 25px; font-size: 1.1rem; font-weight: bold; border-radius: 6px; cursor: pointer; }
+        .back-link { display: inline-block; margin-top: 25px; color: #03dac6; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="game-box">
+        <h2>🧮 Math Attack!</h2>
+        <p>Solve the problem as fast as you can to score XP!</p>
+        
+        <div class="question" id="problem">? + ?</div>
+        <input type="number" id="answerInput" placeholder="Type answer..." autofocus>
+        <br>
+        <button class="btn" id="submitBtn">SUBMIT</button>
+        
+        <h3 style="color: #ff4757;">Score: <span id="score">0</span> XP</h3>
+        
+        <a href="index.html" class="back-link">⬅️ Back to Hub</a>
+    </div>
+
+    <script>
+        let score = 0;
+        let num1, num2, correctAnswer;
+
+        const problemDisplay = document.getElementById('problem');
+        const input = document.getElementById('answerInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const scoreDisplay = document.getElementById('score');
+
+        function generateQuestion() {
+            // CODE CHALLENGE: Change the 10 to 50 or 100 to make the numbers bigger!
+            num1 = Math.floor(Math.random() * 10) + 1;
+            num2 = Math.floor(Math.random() * 10) + 1;
+            
+            // CODE CHALLENGE: Change "+" to "*" to turn this into a multiplication game!
+            correctAnswer = num1 + num2; 
+            problemDisplay.innerText = `${num1} + ${num2}`;
+            input.value = '';
+            input.focus();
+        }
+
+        function checkAnswer() {
+            if (parseInt(input.value) === correctAnswer) {
+                score += 10;
+                scoreDisplay.innerText = score;
+                alert("🎉 Correct! +10 XP");
+                generateQuestion();
+            } else {
+                alert("❌ Oops! Try that one again.");
+            }
+        }
+
+        submitBtn.addEventListener('click', checkAnswer);
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') checkAnswer(); });
+
+        generateQuestion();
+    </script>
+</body>
+</html>
