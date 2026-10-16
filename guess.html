@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Wizard</title>
+    <style>
+        body { background-color: #121214; color: #ffffff; font-family: 'Segoe UI', sans-serif; text-align: center; padding: 50px 20px; }
+        .game-box { background-color: #1e1e24; border: 2px solid #03dac6; border-radius: 12px; padding: 40px; max-width: 400px; margin: 0 auto; }
+        input { font-size: 1.5rem; padding: 10px; width: 50%; text-align: center; border-radius: 6px; border: none; margin: 20px 0; color: #000; }
+        .btn { background-color: #6200ee; color: white; border: none; padding: 12px 25px; font-size: 1.1rem; border-radius: 6px; cursor: pointer; }
+        .back-link { display: inline-block; margin-top: 25px; color: #03dac6; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <div class="game-box">
+        <h2>🔮 Number Wizard</h2>
+        <p>I am thinking of a number between <strong>1 and 50</strong>. Can you find it?</p>
+        
+        <input type="number" id="guessInput" placeholder="??">
+        <br>
+        <button class="btn" id="guessBtn">GUESS</button>
+        
+        <h3 id="hint" style="color: #ffa502; margin-top: 20px;">Take a guess!</h3>
+        <p>Attempts: <span id="attempts">0</span></p>
+        
+        <a href="index.html" class="back-link">⬅️ Back to Hub</a>
+    </div>
+
+    <script>
+        // CODE CHALLENGE: Change 50 to 100 to expand the guessing universe range!
+        const secretNumber = Math.floor(Math.random() * 50) + 1;
+        let attempts = 0;
+
+        const input = document.getElementById('guessInput');
+        const button = document.getElementById('guessBtn');
+        const hint = document.getElementById('hint');
+        const attemptsDisplay = document.getElementById('attempts');
+
+        button.addEventListener('click', () => {
+            const userGuess = parseInt(input.value);
+            attempts++;
+            attemptsDisplay.innerText = attempts;
+
+            if (userGuess === secretNumber) {
+                hint.style.color = "#2ed573";
+                hint.innerText = `🎉 YOU WIN! The number was ${secretNumber}! It took ${attempts} tries.`;
+            } else if (userGuess < secretNumber) {
+                hint.innerText = "📈 HIGHER! Try a bigger number.";
+            } else if (userGuess > secretNumber) {
+                hint.innerText = "📉 LOWER! Try a smaller number.";
+            }
+            input.value = '';
+        });
+    </script>
+</body>
+</html>
