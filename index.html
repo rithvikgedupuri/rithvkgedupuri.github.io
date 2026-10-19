@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Radar - Play Games & Reviews</title>
+    <title>Game Radar - Play & Review Top Games</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -14,6 +14,7 @@
             --text-muted: #94a3b8;
             --border-color: #334155;
             --danger-color: #ef4444;
+            --star-color: #f59e0b;
         }
 
         * {
@@ -25,16 +26,54 @@
             -webkit-user-select: none;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
             line-height: 1.6;
             padding: 15px;
+            padding-top: 70px;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
+        }
+
+        /* STICKY NAV BAR */
+        nav.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 100;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            overflow-x: auto;
+        }
+
+        nav.navbar a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            padding: 5px 10px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        nav.navbar a:hover, nav.navbar a.active {
+            color: var(--accent-color);
+            background: rgba(56, 189, 248, 0.1);
         }
 
         header {
@@ -147,7 +186,7 @@
         .search-container {
             display: flex;
             gap: 10px;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .search-box {
@@ -159,6 +198,29 @@
             color: var(--text-main);
             border-radius: 8px;
             outline: none;
+        }
+
+        .tag-container {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .tag-btn {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .tag-btn.active {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border-color: var(--accent-color);
         }
 
         .game-grid {
@@ -175,6 +237,13 @@
             padding: 12px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .game-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
         }
 
         .game-card h3 {
@@ -210,6 +279,23 @@
             font-size: 0.95rem;
         }
 
+        .star-select {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .star-select span {
+            color: var(--border-color);
+            transition: color 0.2s;
+        }
+
+        .star-select span.active {
+            color: var(--star-color);
+        }
+
         button.action-btn {
             background: var(--accent-color);
             color: var(--bg-color);
@@ -238,48 +324,69 @@
         .review-item strong {
             color: var(--accent-color);
         }
+
+        .review-stars {
+            color: var(--star-color);
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 <body>
 
+    <!-- STICKY NAVBAR -->
+    <nav class="navbar">
+        <a href="#arcade">🕹️ Arcade</a>
+        <a href="#search">🔍 Database</a>
+        <a href="#quiz">🎮 Quiz</a>
+        <a href="#top5">🏆 Top 5</a>
+        <a href="#vote">📊 Vote</a>
+        <a href="#reviews">✍️ Reviews</a>
+    </nav>
+
     <div class="container">
         <header>
-            <h1>📡 Game Radar Arcade</h1>
-            <p>Play interactive action games & explore top reviews!</p>
+            <h1>📡 Game Radar Hub</h1>
+            <p>Play minigames, discover titles, and share reviews!</p>
         </header>
 
         <!-- PLAYABLE ARCADE GAMES SECTION -->
-        <section>
+        <section id="arcade">
             <h2>🕹️ Play Action Games Now</h2>
             <div class="arcade-selector">
-                <button class="arcade-tab active" onclick="switchGame('subway')">Subway Runner</button>
-                <button class="arcade-tab" onclick="switchGame('geometry')">Geometry Dash</button>
-                <button class="arcade-tab" onclick="switchGame('fruit')">Fruit Ninja</button>
-                <button class="arcade-tab" onclick="switchGame('reflex')">Reflex Dodge</button>
-                <button class="arcade-tab" onclick="switchGame('snake')">Snake Reflex</button>
+                <button id="tab-subway" class="arcade-tab active" onclick="switchGame('subway')">Subway Runner</button>
+                <button id="tab-geometry" class="arcade-tab" onclick="switchGame('geometry')">Geometry Dash</button>
+                <button id="tab-fruit" class="arcade-tab" onclick="switchGame('fruit')">Fruit Ninja</button>
+                <button id="tab-reflex" class="arcade-tab" onclick="switchGame('reflex')">Reflex Dodge</button>
+                <button id="tab-snake" class="arcade-tab" onclick="switchGame('snake')">Snake Reflex</button>
             </div>
 
             <div class="game-screen-wrapper">
                 <canvas id="gameCanvas" width="600" height="320"></canvas>
             </div>
 
-            <div id="onScreenControls" class="game-controls">
-                <!-- Controls load dynamically depending on active game -->
-            </div>
+            <div id="onScreenControls" class="game-controls"></div>
         </section>
 
         <!-- SEARCH DATABASE SECTION -->
-        <section>
+        <section id="search">
             <h2>🔍 Search Games Database</h2>
             <div class="search-container">
-                <input type="text" id="searchInput" class="search-box" placeholder="Search PUBG, Subway Surfers, Geometry Dash...">
-                <button class="action-btn" onclick="filterGames()" style="width: auto;">Search</button>
+                <input type="text" id="searchInput" class="search-box" placeholder="Search PUBG, Subway Surfers, Geometry Dash..." oninput="filterGames()">
+            </div>
+            <div class="tag-container" id="tagContainer">
+                <button class="tag-btn active" onclick="filterByTag('All')">All</button>
+                <button class="tag-btn" onclick="filterByTag('Reflex')">Reflex</button>
+                <button class="tag-btn" onclick="filterByTag('Action')">Action</button>
+                <button class="tag-btn" onclick="filterByTag('Sandbox')">Sandbox</button>
+                <button class="tag-btn" onclick="filterByTag('Sports')">Sports</button>
+                <button class="tag-btn" onclick="filterByTag('Horror')">Horror</button>
             </div>
             <div id="gameGrid" class="game-grid"></div>
         </section>
 
         <!-- QUIZ SECTION -->
-        <section>
+        <section id="quiz">
             <h2>🎮 Game Finder Quiz</h2>
             <label for="genreSelect">Choose your favorite genre:</label>
             <select id="genreSelect">
@@ -298,7 +405,7 @@
         </section>
 
         <!-- TOP 5 GAME LIST SECTION -->
-        <section>
+        <section id="top5">
             <h2>🏆 My Top 5 Games of the Year</h2>
             <p style="color: var(--text-muted); margin-bottom: 12px;">Here are my absolute favorite games right now:</p>
             <ol style="font-size: 0.95rem; line-height: 1.8; color: var(--text-main); padding-left: 20px;">
@@ -311,44 +418,64 @@
         </section>
 
         <!-- VOTING POLL SECTION -->
-        <section style="text-align: center;">
+        <section id="vote" style="text-align: center;">
             <h2 style="margin-top: 0;">📊 Cast Your Vote!</h2>
             <p style="color: var(--text-muted); margin-bottom: 12px;">Vote for your favorite game on my official poll:</p>
             <a href="https://strawpoll.com/poy9k1qOOgJ" target="_blank" style="display: inline-block; background-color: var(--accent-color); color: var(--bg-color); padding: 10px 20px; text-decoration: none; font-weight: bold; border-radius: 8px;">👉 Click Here to Vote Now! 👈</a>
         </section>
 
         <!-- REVIEWS SECTION -->
-        <section>
+        <section id="reviews">
             <h2>✍️ Community Reviews</h2>
             <label for="gameTitle">Game Title</label>
             <input type="text" id="gameTitle" placeholder="Game Title">
+            
+            <label>Rating</label>
+            <div class="star-select" id="starSelect">
+                <span onclick="setRating(1)">★</span>
+                <span onclick="setRating(2)">★</span>
+                <span onclick="setRating(3)">★</span>
+                <span onclick="setRating(4)">★</span>
+                <span onclick="setRating(5)">★</span>
+            </div>
+
             <label for="reviewText">Your Review</label>
             <textarea id="reviewText" rows="3" placeholder="Write your review here..."></textarea>
             <button class="action-btn" onclick="submitReview()">Submit Review</button>
             <div style="margin-top: 15px;">
                 <h3>Recent Reviews:</h3>
-                <div id="reviewList">
-                    <div class="review-item">
-                        <strong>Minecraft</strong>
-                        <p>Infinite creativity and survival fun!</p>
-                    </div>
-                </div>
+                <div id="reviewList"></div>
             </div>
         </section>
     </div>
 
     <script>
+        /* HIGH SCORE STORAGE HELPERS */
+        function getHighScore(game) {
+            return localStorage.getItem(`highScore_${game}`) || 0;
+        }
+        function saveHighScore(game, score) {
+            let high = getHighScore(game);
+            if(score > high) {
+                localStorage.setItem(`highScore_${game}`, score);
+                return score;
+            }
+            return high;
+        }
+
         /* ARCADE GAME ENGINES */
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         let currentGame = 'subway';
         let animId = null;
         let gameState = { score: 0, gameOver: false };
+        let selectedRating = 5;
 
         function switchGame(gameName) {
             currentGame = gameName;
             document.querySelectorAll('.arcade-tab').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+            let activeTab = document.getElementById(`tab-${gameName}`);
+            if(activeTab) activeTab.classList.add('active');
             if(animId) cancelAnimationFrame(animId);
             initActiveGame();
         }
@@ -391,7 +518,7 @@
 
                 // Obstacles
                 ctx.fillStyle = '#ef4444';
-                subway.obstacles.forEach((obs, idx) => {
+                subway.obstacles.forEach((obs) => {
                     obs.y += subway.speed;
                     ctx.fillRect(obs.lane * 200 + 60, obs.y, 80, 40);
 
@@ -402,11 +529,10 @@
                 });
                 subway.obstacles = subway.obstacles.filter(o => o.y < 350);
 
-                ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif';
-                ctx.fillText(`Score: ${gameState.score}`, 15, 25);
+                drawScoreUI('subway');
                 animId = requestAnimationFrame(loopSubway);
             } else {
-                drawGameOver();
+                drawGameOver('subway');
             }
         }
 
@@ -429,7 +555,7 @@
         }
         function loopGeo() {
             ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, 600, 320);
-            ctx.fillStyle = '#334155'; ctx.fillRect(0, 260, 600, 60); // ground
+            ctx.fillStyle = '#334155'; ctx.fillRect(0, 260, 600, 60);
 
             if(!gameState.gameOver) {
                 geo.timer++;
@@ -438,16 +564,13 @@
                 }
                 gameState.score++;
 
-                // Physics
                 geo.vy += 0.6;
                 geo.y += geo.vy;
                 if(geo.y >= 220) { geo.y = 220; geo.vy = 0; geo.grounded = true; }
 
-                // Cube
                 ctx.fillStyle = '#38bdf8';
                 ctx.fillRect(80, geo.y, 40, 40);
 
-                // Spikes
                 ctx.fillStyle = '#ef4444';
                 geo.obstacles.forEach(obs => {
                     obs.x -= 6;
@@ -457,18 +580,16 @@
                     ctx.lineTo(obs.x + 40, 260);
                     ctx.fill();
 
-                    // Collision check
                     if(obs.x < 110 && obs.x + 30 > 80 && geo.y > 180) {
                         gameState.gameOver = true;
                     }
                 });
                 geo.obstacles = geo.obstacles.filter(o => o.x > -50);
 
-                ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif';
-                ctx.fillText(`Score: ${gameState.score}`, 15, 25);
+                drawScoreUI('geometry');
                 animId = requestAnimationFrame(loopGeo);
             } else {
-                drawGameOver();
+                drawGameOver('geometry');
             }
         }
 
@@ -478,7 +599,7 @@
             gameState = { score: 0, gameOver: false };
             fruits = [];
             document.getElementById('onScreenControls').innerHTML = `
-                <p style="color:var(--text-muted); text-align:center;">Slice fruits by tapping/swiping on canvas!</p>
+                <p style="color:var(--text-muted); text-align:center;">Slice fruits by tapping/swiping!</p>
                 <button class="ctrl-btn" onclick="initFruit()">🔄 Restart</button>
             `;
             loopFruit();
@@ -509,10 +630,7 @@
                 }
 
                 fruits.forEach(f => {
-                    f.x += f.vx;
-                    f.y += f.vy;
-                    f.vy += 0.25;
-
+                    f.x += f.vx; f.y += f.vy; f.vy += 0.25;
                     if(!f.sliced) {
                         ctx.beginPath();
                         ctx.arc(f.x, f.y, 20, 0, Math.PI * 2);
@@ -522,11 +640,10 @@
                 });
                 fruits = fruits.filter(f => f.y < 350);
 
-                ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif';
-                ctx.fillText(`Score: ${gameState.score}`, 15, 25);
+                drawScoreUI('fruit');
                 animId = requestAnimationFrame(loopFruit);
             } else {
-                drawGameOver();
+                drawGameOver('fruit');
             }
         }
 
@@ -564,26 +681,22 @@
                     });
                 }
 
-                // Player
                 ctx.fillStyle = '#38bdf8';
                 ctx.fillRect(reflex.x, reflex.y, 25, 25);
 
-                // Enemies
                 ctx.fillStyle = '#ef4444';
                 reflex.enemies.forEach(e => {
                     e.x += e.vx; e.y += e.vy;
                     ctx.fillRect(e.x, e.y, 18, 18);
-
                     if(Math.hypot(e.x - reflex.x, e.y - reflex.y) < 20) {
                         gameState.gameOver = true;
                     }
                 });
 
-                ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif';
-                ctx.fillText(`Score: ${gameState.score}`, 15, 25);
+                drawScoreUI('reflex');
                 animId = requestAnimationFrame(loopReflex);
             } else {
-                drawGameOver();
+                drawGameOver('reflex');
             }
         }
 
@@ -622,15 +735,8 @@
                 if(snakeTimer % 6 === 0) {
                     let head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
 
-                    // Wall Collision
-                    if(head.x < 0 || head.x >= 600 || head.y < 0 || head.y >= 320) {
-                        gameState.gameOver = true;
-                    }
-
-                    // Self Collision
-                    snake.forEach(s => {
-                        if(s.x === head.x && s.y === head.y) gameState.gameOver = true;
-                    });
+                    if(head.x < 0 || head.x >= 600 || head.y < 0 || head.y >= 320) gameState.gameOver = true;
+                    snake.forEach(s => { if(s.x === head.x && s.y === head.y) gameState.gameOver = true; });
 
                     if(!gameState.gameOver) {
                         snake.unshift(head);
@@ -643,31 +749,34 @@
                     }
                 }
 
-                // Draw Food
                 ctx.fillStyle = '#ef4444';
                 ctx.fillRect(food.x, food.y, 18, 18);
 
-                // Draw Snake
                 ctx.fillStyle = '#38bdf8';
                 snake.forEach(s => ctx.fillRect(s.x, s.y, 18, 18));
 
-                ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif';
-                ctx.fillText(`Score: ${gameState.score}`, 15, 25);
+                drawScoreUI('snake');
                 animId = requestAnimationFrame(loopSnake);
             } else {
-                drawGameOver();
+                drawGameOver('snake');
             }
         }
 
-        function drawGameOver() {
+        /* SCORE & OVERLAY DRAWERS */
+        function drawScoreUI(game) {
+            let high = getHighScore(game);
+            ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif';
+            ctx.fillText(`Score: ${gameState.score} | High: ${high}`, 15, 25);
+        }
+
+        function drawGameOver(game) {
+            let best = saveHighScore(game, gameState.score);
             ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
             ctx.fillRect(0, 0, 600, 320);
-            ctx.fillStyle = '#ef4444';
-            ctx.font = 'bold 28px sans-serif';
+            ctx.fillStyle = '#ef4444'; ctx.font = 'bold 28px sans-serif';
             ctx.fillText('GAME OVER!', 220, 140);
-            ctx.fillStyle = '#fff';
-            ctx.font = '18px sans-serif';
-            ctx.fillText(`Final Score: ${gameState.score}`, 240, 180);
+            ctx.fillStyle = '#fff'; ctx.font = '18px sans-serif';
+            ctx.fillText(`Final Score: ${gameState.score}  |  Best Score: ${best}`, 180, 180);
         }
 
         function initActiveGame() {
@@ -678,24 +787,45 @@
             else if(currentGame === 'snake') initSnake();
         }
 
-        /* SEARCH & APP DATABASE */
+        /* KEYBOARD CONTROLS */
+        window.addEventListener('keydown', (e) => {
+            if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) {
+                e.preventDefault();
+            }
+            if(currentGame === 'subway') {
+                if(e.key === 'ArrowLeft') moveSubway(-1);
+                if(e.key === 'ArrowRight') moveSubway(1);
+            } else if(currentGame === 'geometry') {
+                if(e.key === ' ' || e.key === 'ArrowUp') geoJump();
+            } else if(currentGame === 'reflex') {
+                if(e.key === 'ArrowUp') moveReflex(0, -25);
+                if(e.key === 'ArrowDown') moveReflex(0, 25);
+                if(e.key === 'ArrowLeft') moveReflex(-25, 0);
+                if(e.key === 'ArrowRight') moveReflex(25, 0);
+            } else if(currentGame === 'snake') {
+                if(e.key === 'ArrowUp') setSnakeDir(0, -20);
+                if(e.key === 'ArrowDown') setSnakeDir(0, 20);
+                if(e.key === 'ArrowLeft') setSnakeDir(-20, 0);
+                if(e.key === 'ArrowRight') setSnakeDir(20, 0);
+            }
+        });
+
+        /* DATABASE & SEARCH */
         const gamesDatabase = [
             { title: "PUBG Mobile", genre: "Action & Shooter" },
             { title: "Minecraft", genre: "Sandbox & Survival" },
             { title: "Roblox", genre: "Sandbox & Survival" },
             { title: "EA Sports FC Mobile", genre: "Mobile & Sports" },
             { title: "Among Us", genre: "Party & Multiplayer" },
-            { title: "Subway Surfers", genre: "Reflex & Action" },
-            { title: "Geometry Dash", genre: "Reflex & Rhythm" },
+            { title: "Subway Surfers", genre: "Reflex & Action", launchKey: "subway" },
+            { title: "Geometry Dash", genre: "Reflex & Rhythm", launchKey: "geometry" },
             { title: "Temple Run 2", genre: "Reflex & Action" },
-            { title: "Fruit Ninja", genre: "Reflex & Arcade" },
+            { title: "Fruit Ninja", genre: "Reflex & Arcade", launchKey: "fruit" },
             { title: "Crossy Road", genre: "Reflex & Arcade" },
             { title: "Fortnite", genre: "Action & Shooter" },
             { title: "Valorant", genre: "Action & Shooter" },
-            { title: "Zelda: Tears of the Kingdom", genre: "Open World / Adventure" },
             { title: "Grand Theft Auto V", genre: "Open World / Action" },
             { title: "Call of Duty: Warzone", genre: "Action & Shooter" },
-            { title: "Counter-Strike 2", genre: "Action & Shooter" },
             { title: "Apex Legends", genre: "Action & Shooter" },
             { title: "Rocket League", genre: "Racing & Sports" },
             { title: "Fall Guys", genre: "Party & Multiplayer" },
@@ -703,59 +833,107 @@
             { title: "Genshin Impact", genre: "Open World / Adventure" }
         ];
 
+        let activeGenreFilter = 'All';
+
         function displayGames(gamesArray) {
             let grid = document.getElementById('gameGrid');
             grid.innerHTML = "";
             if (gamesArray.length === 0) {
-                grid.innerHTML = "<p style='color: var(--text-muted);'>No games found.</p>";
+                grid.innerHTML = "<p style='color: var(--text-muted);'>No games found matching search.</p>";
                 return;
             }
             gamesArray.forEach(game => {
                 let card = document.createElement('div');
                 card.className = 'game-card';
                 card.innerHTML = `<h3>${game.title}</h3><span>${game.genre}</span>`;
+                
+                card.onclick = () => {
+                    if(game.launchKey) {
+                        switchGame(game.launchKey);
+                        document.getElementById('arcade').scrollIntoView({ behavior: 'smooth' });
+                    }
+                };
                 grid.appendChild(card);
             });
         }
 
         function filterGames() {
             let input = document.getElementById('searchInput').value.toLowerCase();
-            let filtered = gamesDatabase.filter(game => 
-                game.title.toLowerCase().includes(input) || 
-                game.genre.toLowerCase().includes(input)
-            );
+            let filtered = gamesDatabase.filter(game => {
+                let matchesSearch = game.title.toLowerCase().includes(input) || game.genre.toLowerCase().includes(input);
+                let matchesTag = (activeGenreFilter === 'All') || game.genre.toLowerCase().includes(activeGenreFilter.toLowerCase());
+                return matchesSearch && matchesTag;
+            });
             displayGames(filtered);
+        }
+
+        function filterByTag(tag) {
+            activeGenreFilter = tag;
+            document.querySelectorAll('.tag-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText === tag);
+            });
+            filterGames();
         }
 
         function recommendGame() {
             let genre = document.getElementById('genreSelect').value;
             let resultDiv = document.getElementById('quiz-result');
             resultDiv.innerText = "Showing top picks for " + genre + "!";
-            let filtered = gamesDatabase.filter(game => 
-                game.genre.toLowerCase().includes(genre.toLowerCase())
-            );
-            displayGames(filtered);
+            filterByTag(genre);
+            document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        /* REVIEWS WITH STAR RATINGS & LOCAL STORAGE */
+        function setRating(r) {
+            selectedRating = r;
+            let stars = document.querySelectorAll('#starSelect span');
+            stars.forEach((s, idx) => {
+                s.classList.toggle('active', idx < r);
+            });
+        }
+
+        function loadReviews() {
+            let saved = JSON.parse(localStorage.getItem('gameReviews')) || [
+                { title: "Minecraft", text: "Infinite creativity and survival fun!", stars: 5 }
+            ];
+            let list = document.getElementById('reviewList');
+            list.innerHTML = "";
+            saved.forEach(r => {
+                let div = document.createElement('div');
+                div.className = 'review-item';
+                div.innerHTML = `
+                    <div class="review-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</div>
+                    <strong>${r.title}</strong>
+                    <p>${r.text}</p>
+                `;
+                list.appendChild(div);
+            });
         }
 
         function submitReview() {
             let title = document.getElementById('gameTitle').value.trim();
             let text = document.getElementById('reviewText').value.trim();
-            let reviewList = document.getElementById('reviewList');
-            if (title === "" || text === "") {
-                alert("Please fill out both fields!");
+            if(!title || !text) {
+                alert("Please complete both title and review text!");
                 return;
             }
-            let newReview = document.createElement('div');
-            newReview.className = 'review-item';
-            newReview.innerHTML = `<strong>${title}</strong><p>${text}</p>`;
-            reviewList.prepend(newReview);
+
+            let saved = JSON.parse(localStorage.getItem('gameReviews')) || [];
+            saved.unshift({ title, text, stars: selectedRating });
+            localStorage.setItem('gameReviews', JSON.stringify(saved));
+
             document.getElementById('gameTitle').value = "";
             document.getElementById('reviewText').value = "";
+            setRating(5);
+            loadReviews();
         }
 
+        /* INITIAL LOAD */
         window.onload = function() {
             initActiveGame();
             displayGames(gamesDatabase);
+            setRating(5);
+            loadReviews();
         };
     </script>
 </body>
