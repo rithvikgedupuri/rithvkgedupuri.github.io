@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Radar - Discover & Review Games</title>
+    <title>Game Radar - Play Games & Reviews</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -13,6 +13,7 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: #334155;
+            --danger-color: #ef4444;
         }
 
         * {
@@ -20,13 +21,15 @@
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
             line-height: 1.6;
-            padding: 20px;
+            padding: 15px;
         }
 
         .container {
@@ -36,7 +39,7 @@
 
         header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             padding: 20px;
             background: var(--card-bg);
             border-radius: 12px;
@@ -46,8 +49,8 @@
 
         header h1 {
             color: var(--accent-color);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            margin-bottom: 5px;
         }
 
         header p {
@@ -56,20 +59,91 @@
 
         section {
             background: var(--card-bg);
-            padding: 25px;
+            padding: 20px;
             border-radius: 12px;
             border: 1px solid var(--border-color);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
         h2 {
             color: var(--accent-color);
             margin-bottom: 15px;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
         }
 
-        /* Search Section Styles */
+        /* ARCADE GAME SECTION STYLES */
+        .arcade-selector {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .arcade-tab {
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .arcade-tab.active {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border-color: var(--accent-color);
+        }
+
+        .game-screen-wrapper {
+            position: relative;
+            width: 100%;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 320px;
+            background: #020617;
+            touch-action: none;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            justify-content: center;
+        }
+
+        .ctrl-btn {
+            background: var(--border-color);
+            color: var(--text-main);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            flex: 1;
+            max-width: 120px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .ctrl-btn:active {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+
+        /* SEARCH SECTION */
         .search-container {
             display: flex;
             gap: 10px;
@@ -78,77 +152,65 @@
 
         .search-box {
             flex: 1;
-            padding: 12px 15px;
+            padding: 10px 14px;
             font-size: 1rem;
             background: var(--bg-color);
             border: 1px solid var(--border-color);
             color: var(--text-main);
             border-radius: 8px;
             outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .search-box:focus {
-            border-color: var(--accent-color);
         }
 
         .game-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 15px;
-            max-height: 400px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            max-height: 300px;
             overflow-y: auto;
             padding-right: 5px;
         }
 
         .game-card {
             background: var(--bg-color);
-            padding: 15px;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .game-card:hover {
-            transform: translateY(-3px);
-            border-color: var(--accent-color);
         }
 
         .game-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-            color: var(--text-main);
+            font-size: 1rem;
+            margin-bottom: 4px;
         }
 
         .game-card span {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--accent-color);
             background: rgba(56, 189, 248, 0.1);
-            padding: 2px 8px;
+            padding: 2px 6px;
             border-radius: 4px;
             display: inline-block;
         }
 
-        /* Form Controls */
+        /* FORM CONTROLS */
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         select, input[type="text"], textarea {
             width: 100%;
-            padding: 10px 12px;
+            padding: 10px;
             background: var(--bg-color);
             border: 1px solid var(--border-color);
             color: var(--text-main);
             border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 1rem;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
         }
 
-        button {
+        button.action-btn {
             background: var(--accent-color);
             color: var(--bg-color);
             border: none;
@@ -161,23 +223,16 @@
             width: 100%;
         }
 
-        button:hover {
+        button.action-btn:hover {
             background: var(--accent-hover);
-        }
-
-        #quiz-result {
-            margin-top: 15px;
-            font-weight: bold;
-            color: var(--accent-color);
-            font-size: 1.1rem;
         }
 
         .review-item {
             background: var(--bg-color);
-            padding: 12px 15px;
+            padding: 10px 14px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .review-item strong {
@@ -189,18 +244,37 @@
 
     <div class="container">
         <header>
-            <h1>📡 Game Radar</h1>
-            <p>Your interactive hub for top games & community reviews!</p>
+            <h1>📡 Game Radar Arcade</h1>
+            <p>Play interactive action games & explore top reviews!</p>
         </header>
 
-        <!-- SEARCH & FILTER SECTION -->
+        <!-- PLAYABLE ARCADE GAMES SECTION -->
+        <section>
+            <h2>🕹️ Play Action Games Now</h2>
+            <div class="arcade-selector">
+                <button class="arcade-tab active" onclick="switchGame('subway')">Subway Runner</button>
+                <button class="arcade-tab" onclick="switchGame('geometry')">Geometry Dash</button>
+                <button class="arcade-tab" onclick="switchGame('fruit')">Fruit Ninja</button>
+                <button class="arcade-tab" onclick="switchGame('reflex')">Reflex Dodge</button>
+                <button class="arcade-tab" onclick="switchGame('snake')">Snake Reflex</button>
+            </div>
+
+            <div class="game-screen-wrapper">
+                <canvas id="gameCanvas" width="600" height="320"></canvas>
+            </div>
+
+            <div id="onScreenControls" class="game-controls">
+                <!-- Controls load dynamically depending on active game -->
+            </div>
+        </section>
+
+        <!-- SEARCH DATABASE SECTION -->
         <section>
             <h2>🔍 Search Games Database</h2>
             <div class="search-container">
                 <input type="text" id="searchInput" class="search-box" placeholder="Search PUBG, Subway Surfers, Geometry Dash...">
-                <button onclick="filterGames()" style="width: auto;">Search</button>
+                <button class="action-btn" onclick="filterGames()" style="width: auto;">Search</button>
             </div>
-            <!-- Dynamically populated game grid -->
             <div id="gameGrid" class="game-grid"></div>
         </section>
 
@@ -219,16 +293,15 @@
                 <option value="Racing">Racing & Sports</option>
                 <option value="Reflex">Reflex & Arcade</option>
             </select>
-            <button onclick="recommendGame()">Find My Game!</button>
-            <div id="quiz-result"></div>
+            <button class="action-btn" onclick="recommendGame()">Find My Game!</button>
+            <div id="quiz-result" style="margin-top:10px; font-weight:bold; color:var(--accent-color);"></div>
         </section>
 
-        <!-- Start of Top 5 Game List -->
+        <!-- TOP 5 GAME LIST SECTION -->
         <section>
             <h2>🏆 My Top 5 Games of the Year</h2>
-            <p style="color: var(--text-muted); margin-bottom: 15px;">Here are my absolute favorite games right now and exactly why you should play them:</p>
-
-            <ol style="font-size: 16px; line-height: 1.8; color: var(--text-main); padding-left: 20px;">
+            <p style="color: var(--text-muted); margin-bottom: 12px;">Here are my absolute favorite games right now:</p>
+            <ol style="font-size: 0.95rem; line-height: 1.8; color: var(--text-main); padding-left: 20px;">
               <li>🚀 <strong>PUBG Mobile</strong> - Intense battle royale survival gameplay with friends!</li>
               <li>🧱 <strong>Minecraft</strong> - Endless building options and infinite sandbox exploration.</li>
               <li>👑 <strong>Roblox</strong> - Millions of custom player-created minigames to try out.</li>
@@ -236,31 +309,23 @@
               <li>👾 <strong>Among Us</strong> - Keep your eyes open and spot the imposter before it's too late!</li>
             </ol>
         </section>
-        <!-- End of Top 5 Game List -->
 
-        <!-- Start of Voting Poll Section -->
+        <!-- VOTING POLL SECTION -->
         <section style="text-align: center;">
-            <hr style="margin: 0 0 20px 0; border: 1px solid var(--border-color);">
-
             <h2 style="margin-top: 0;">📊 Cast Your Vote!</h2>
-            <p style="color: var(--text-muted); margin-bottom: 15px;">Help me settle the debate! Vote for your favorite game on my official poll:</p>
-            
-            <a href="https://strawpoll.com/poy9k1qOOgJ" target="_blank" style="display: inline-block; background-color: var(--accent-color); color: var(--bg-color); padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 8px; transition: background 0.2s;">👉 Click Here to Vote Now! 👈</a>
+            <p style="color: var(--text-muted); margin-bottom: 12px;">Vote for your favorite game on my official poll:</p>
+            <a href="https://strawpoll.com/poy9k1qOOgJ" target="_blank" style="display: inline-block; background-color: var(--accent-color); color: var(--bg-color); padding: 10px 20px; text-decoration: none; font-weight: bold; border-radius: 8px;">👉 Click Here to Vote Now! 👈</a>
         </section>
-        <!-- End of Voting Poll Section -->
 
-        <!-- REVIEW SUBMISSION SECTION -->
+        <!-- REVIEWS SECTION -->
         <section>
             <h2>✍️ Community Reviews</h2>
             <label for="gameTitle">Game Title</label>
             <input type="text" id="gameTitle" placeholder="Game Title">
-            
             <label for="reviewText">Your Review</label>
             <textarea id="reviewText" rows="3" placeholder="Write your review here..."></textarea>
-            
-            <button onclick="submitReview()">Submit Review</button>
-            
-            <div style="margin-top: 20px;">
+            <button class="action-btn" onclick="submitReview()">Submit Review</button>
+            <div style="margin-top: 15px;">
                 <h3>Recent Reviews:</h3>
                 <div id="reviewList">
                     <div class="review-item">
@@ -273,7 +338,347 @@
     </div>
 
     <script>
-        // Game Database Array (5 new reflex & action games included)
+        /* ARCADE GAME ENGINES */
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let currentGame = 'subway';
+        let animId = null;
+        let gameState = { score: 0, gameOver: false };
+
+        function switchGame(gameName) {
+            currentGame = gameName;
+            document.querySelectorAll('.arcade-tab').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            if(animId) cancelAnimationFrame(animId);
+            initActiveGame();
+        }
+
+        /* 1. SUBWAY RUNNER */
+        let subway = { lane: 1, obstacles: [], speed: 4, timer: 0 };
+        function initSubway() {
+            gameState = { score: 0, gameOver: false };
+            subway = { lane: 1, obstacles: [], speed: 4, timer: 0 };
+            document.getElementById('onScreenControls').innerHTML = `
+                <button class="ctrl-btn" onclick="moveSubway(-1)">⬅️ Left</button>
+                <button class="ctrl-btn" onclick="initSubway()">🔄 Restart</button>
+                <button class="ctrl-btn" onclick="moveSubway(1)">Right ➡️</button>
+            `;
+            loopSubway();
+        }
+        function moveSubway(dir) {
+            if(!gameState.gameOver) {
+                subway.lane = Math.max(0, Math.min(2, subway.lane + dir));
+            }
+        }
+        function loopSubway() {
+            ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 600, 320);
+            
+            // Lanes
+            ctx.strokeStyle = '#334155'; ctx.setLineDash([10, 10]);
+            ctx.beginPath(); ctx.moveTo(200, 0); ctx.lineTo(200, 320);
+            ctx.moveTo(400, 0); ctx.lineTo(400, 320); ctx.stroke(); ctx.setLineDash([]);
+
+            if(!gameState.gameOver) {
+                subway.timer++;
+                if(subway.timer % 40 === 0) {
+                    subway.obstacles.push({ lane: Math.floor(Math.random()*3), y: -40 });
+                }
+                gameState.score++;
+
+                // Draw Player
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillRect(subway.lane * 200 + 75, 240, 50, 60);
+
+                // Obstacles
+                ctx.fillStyle = '#ef4444';
+                subway.obstacles.forEach((obs, idx) => {
+                    obs.y += subway.speed;
+                    ctx.fillRect(obs.lane * 200 + 60, obs.y, 80, 40);
+
+                    // Collision
+                    if(obs.lane === subway.lane && obs.y > 200 && obs.y < 290) {
+                        gameState.gameOver = true;
+                    }
+                });
+                subway.obstacles = subway.obstacles.filter(o => o.y < 350);
+
+                ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif';
+                ctx.fillText(`Score: ${gameState.score}`, 15, 25);
+                animId = requestAnimationFrame(loopSubway);
+            } else {
+                drawGameOver();
+            }
+        }
+
+        /* 2. GEOMETRY DASH */
+        let geo = { y: 220, vy: 0, grounded: true, obstacles: [], timer: 0 };
+        function initGeo() {
+            gameState = { score: 0, gameOver: false };
+            geo = { y: 220, vy: 0, grounded: true, obstacles: [], timer: 0 };
+            document.getElementById('onScreenControls').innerHTML = `
+                <button class="ctrl-btn" style="max-width:200px;" onclick="geoJump()">🪂 JUMP</button>
+                <button class="ctrl-btn" onclick="initGeo()">🔄 Restart</button>
+            `;
+            loopGeo();
+        }
+        function geoJump() {
+            if(geo.grounded && !gameState.gameOver) {
+                geo.vy = -12;
+                geo.grounded = false;
+            }
+        }
+        function loopGeo() {
+            ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, 600, 320);
+            ctx.fillStyle = '#334155'; ctx.fillRect(0, 260, 600, 60); // ground
+
+            if(!gameState.gameOver) {
+                geo.timer++;
+                if(geo.timer % 60 === 0) {
+                    geo.obstacles.push({ x: 600 });
+                }
+                gameState.score++;
+
+                // Physics
+                geo.vy += 0.6;
+                geo.y += geo.vy;
+                if(geo.y >= 220) { geo.y = 220; geo.vy = 0; geo.grounded = true; }
+
+                // Cube
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillRect(80, geo.y, 40, 40);
+
+                // Spikes
+                ctx.fillStyle = '#ef4444';
+                geo.obstacles.forEach(obs => {
+                    obs.x -= 6;
+                    ctx.beginPath();
+                    ctx.moveTo(obs.x, 260);
+                    ctx.lineTo(obs.x + 20, 220);
+                    ctx.lineTo(obs.x + 40, 260);
+                    ctx.fill();
+
+                    // Collision check
+                    if(obs.x < 110 && obs.x + 30 > 80 && geo.y > 180) {
+                        gameState.gameOver = true;
+                    }
+                });
+                geo.obstacles = geo.obstacles.filter(o => o.x > -50);
+
+                ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif';
+                ctx.fillText(`Score: ${gameState.score}`, 15, 25);
+                animId = requestAnimationFrame(loopGeo);
+            } else {
+                drawGameOver();
+            }
+        }
+
+        /* 3. FRUIT NINJA */
+        let fruits = [];
+        function initFruit() {
+            gameState = { score: 0, gameOver: false };
+            fruits = [];
+            document.getElementById('onScreenControls').innerHTML = `
+                <p style="color:var(--text-muted); text-align:center;">Slice fruits by tapping/swiping on canvas!</p>
+                <button class="ctrl-btn" onclick="initFruit()">🔄 Restart</button>
+            `;
+            loopFruit();
+        }
+        canvas.addEventListener('pointerdown', (e) => {
+            if(currentGame !== 'fruit') return;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (600 / rect.width);
+            const y = (e.clientY - rect.top) * (320 / rect.height);
+            fruits.forEach(f => {
+                if(!f.sliced && Math.hypot(f.x - x, f.y - y) < 30) {
+                    f.sliced = true;
+                    if(f.bomb) gameState.gameOver = true;
+                    else gameState.score += 10;
+                }
+            });
+        });
+        function loopFruit() {
+            ctx.fillStyle = '#1e1b4b'; ctx.fillRect(0, 0, 600, 320);
+
+            if(!gameState.gameOver) {
+                if(Math.random() < 0.03) {
+                    fruits.push({
+                        x: Math.random() * 500 + 50, y: 320,
+                        vx: (Math.random() - 0.5) * 4, vy: - (Math.random() * 4 + 10),
+                        bomb: Math.random() < 0.2, sliced: false
+                    });
+                }
+
+                fruits.forEach(f => {
+                    f.x += f.vx;
+                    f.y += f.vy;
+                    f.vy += 0.25;
+
+                    if(!f.sliced) {
+                        ctx.beginPath();
+                        ctx.arc(f.x, f.y, 20, 0, Math.PI * 2);
+                        ctx.fillStyle = f.bomb ? '#ef4444' : '#10b981';
+                        ctx.fill();
+                    }
+                });
+                fruits = fruits.filter(f => f.y < 350);
+
+                ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif';
+                ctx.fillText(`Score: ${gameState.score}`, 15, 25);
+                animId = requestAnimationFrame(loopFruit);
+            } else {
+                drawGameOver();
+            }
+        }
+
+        /* 4. REFLEX DODGE */
+        let reflex = { x: 280, y: 140, enemies: [] };
+        function initReflex() {
+            gameState = { score: 0, gameOver: false };
+            reflex = { x: 280, y: 140, enemies: [] };
+            document.getElementById('onScreenControls').innerHTML = `
+                <button class="ctrl-btn" onclick="moveReflex(0, -25)">⬆️</button>
+                <button class="ctrl-btn" onclick="moveReflex(-25, 0)">⬅️</button>
+                <button class="ctrl-btn" onclick="moveReflex(25, 0)">➡️</button>
+                <button class="ctrl-btn" onclick="moveReflex(0, 25)">⬇️</button>
+                <button class="ctrl-btn" onclick="initReflex()">🔄 Restart</button>
+            `;
+            loopReflex();
+        }
+        function moveReflex(dx, dy) {
+            if(!gameState.gameOver) {
+                reflex.x = Math.max(0, Math.min(560, reflex.x + dx));
+                reflex.y = Math.max(0, Math.min(280, reflex.y + dy));
+            }
+        }
+        function loopReflex() {
+            ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, 600, 320);
+
+            if(!gameState.gameOver) {
+                gameState.score++;
+                if(Math.random() < 0.08) {
+                    reflex.enemies.push({
+                        x: Math.random() > 0.5 ? 0 : 600,
+                        y: Math.random() * 320,
+                        vx: (Math.random() - 0.5) * 6,
+                        vy: (Math.random() - 0.5) * 6
+                    });
+                }
+
+                // Player
+                ctx.fillStyle = '#38bdf8';
+                ctx.fillRect(reflex.x, reflex.y, 25, 25);
+
+                // Enemies
+                ctx.fillStyle = '#ef4444';
+                reflex.enemies.forEach(e => {
+                    e.x += e.vx; e.y += e.vy;
+                    ctx.fillRect(e.x, e.y, 18, 18);
+
+                    if(Math.hypot(e.x - reflex.x, e.y - reflex.y) < 20) {
+                        gameState.gameOver = true;
+                    }
+                });
+
+                ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif';
+                ctx.fillText(`Score: ${gameState.score}`, 15, 25);
+                animId = requestAnimationFrame(loopReflex);
+            } else {
+                drawGameOver();
+            }
+        }
+
+        /* 5. SNAKE REFLEX */
+        let snake = [], dir = {x: 20, y: 0}, food = {x: 0, y: 0}, snakeTimer = 0;
+        function initSnake() {
+            gameState = { score: 0, gameOver: false };
+            snake = [{x: 100, y: 100}, {x: 80, y: 100}];
+            dir = {x: 20, y: 0};
+            spawnFood();
+            document.getElementById('onScreenControls').innerHTML = `
+                <button class="ctrl-btn" onclick="setSnakeDir(0, -20)">⬆️</button>
+                <button class="ctrl-btn" onclick="setSnakeDir(-20, 0)">⬅️</button>
+                <button class="ctrl-btn" onclick="setSnakeDir(20, 0)">➡️</button>
+                <button class="ctrl-btn" onclick="setSnakeDir(0, 20)">⬇️</button>
+                <button class="ctrl-btn" onclick="initSnake()">🔄 Restart</button>
+            `;
+            loopSnake();
+        }
+        function setSnakeDir(x, y) {
+            if((x !== -dir.x || y !== -dir.y) && !gameState.gameOver) {
+                dir = {x, y};
+            }
+        }
+        function spawnFood() {
+            food = {
+                x: Math.floor(Math.random() * 29) * 20,
+                y: Math.floor(Math.random() * 15) * 20
+            };
+        }
+        function loopSnake() {
+            ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, 600, 320);
+
+            if(!gameState.gameOver) {
+                snakeTimer++;
+                if(snakeTimer % 6 === 0) {
+                    let head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+
+                    // Wall Collision
+                    if(head.x < 0 || head.x >= 600 || head.y < 0 || head.y >= 320) {
+                        gameState.gameOver = true;
+                    }
+
+                    // Self Collision
+                    snake.forEach(s => {
+                        if(s.x === head.x && s.y === head.y) gameState.gameOver = true;
+                    });
+
+                    if(!gameState.gameOver) {
+                        snake.unshift(head);
+                        if(head.x === food.x && head.y === food.y) {
+                            gameState.score += 10;
+                            spawnFood();
+                        } else {
+                            snake.pop();
+                        }
+                    }
+                }
+
+                // Draw Food
+                ctx.fillStyle = '#ef4444';
+                ctx.fillRect(food.x, food.y, 18, 18);
+
+                // Draw Snake
+                ctx.fillStyle = '#38bdf8';
+                snake.forEach(s => ctx.fillRect(s.x, s.y, 18, 18));
+
+                ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif';
+                ctx.fillText(`Score: ${gameState.score}`, 15, 25);
+                animId = requestAnimationFrame(loopSnake);
+            } else {
+                drawGameOver();
+            }
+        }
+
+        function drawGameOver() {
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+            ctx.fillRect(0, 0, 600, 320);
+            ctx.fillStyle = '#ef4444';
+            ctx.font = 'bold 28px sans-serif';
+            ctx.fillText('GAME OVER!', 220, 140);
+            ctx.fillStyle = '#fff';
+            ctx.font = '18px sans-serif';
+            ctx.fillText(`Final Score: ${gameState.score}`, 240, 180);
+        }
+
+        function initActiveGame() {
+            if(currentGame === 'subway') initSubway();
+            else if(currentGame === 'geometry') initGeo();
+            else if(currentGame === 'fruit') initFruit();
+            else if(currentGame === 'reflex') initReflex();
+            else if(currentGame === 'snake') initSnake();
+        }
+
+        /* SEARCH & APP DATABASE */
         const gamesDatabase = [
             { title: "PUBG Mobile", genre: "Action & Shooter" },
             { title: "Minecraft", genre: "Sandbox & Survival" },
@@ -291,49 +696,20 @@
             { title: "Grand Theft Auto V", genre: "Open World / Action" },
             { title: "Call of Duty: Warzone", genre: "Action & Shooter" },
             { title: "Counter-Strike 2", genre: "Action & Shooter" },
-            { title: "League of Legends", genre: "Action & Strategy" },
             { title: "Apex Legends", genre: "Action & Shooter" },
             { title: "Rocket League", genre: "Racing & Sports" },
             { title: "Fall Guys", genre: "Party & Multiplayer" },
             { title: "Terraria", genre: "Sandbox & Survival" },
-            { title: "Stardew Valley", genre: "Sandbox & Survival" },
-            { title: "Genshin Impact", genre: "Open World / Adventure" },
-            { title: "Elden Ring", genre: "Open World / Adventure" },
-            { title: "Baldur's Gate 3", genre: "Open World / Adventure" },
-            { title: "EA Sports FC 24", genre: "Racing & Sports" },
-            { title: "Super Smash Bros. Ultimate", genre: "Fighting & Arcade" },
-            { title: "Mario Kart 8 Deluxe", genre: "Racing & Sports" },
-            { title: "Animal Crossing: New Horizons", genre: "Sandbox & Survival" },
-            { title: "Cyberpunk 2077", genre: "Open World / Adventure" },
-            { title: "Overwatch 2", genre: "Action & Shooter" },
-            { title: "Portal 2", genre: "Party & Multiplayer" },
-            { title: "Undertale", genre: "Open World / Adventure" },
-            { title: "Pokemon Scarlet and Violet", genre: "Open World / Adventure" },
-            { title: "Team Fortress 2", genre: "Action & Shooter" },
-            { title: "Hades", genre: "Action & Shooter" },
-            { title: "Subnautica", genre: "Horror & Survival" },
-            { title: "Phasmophobia", genre: "Horror & Survival" },
-            { title: "Dead by Daylight", genre: "Horror & Survival" },
-            { title: "Resident Evil 4", genre: "Horror & Survival" },
-            { title: "Mortal Kombat 1", genre: "Fighting & Arcade" },
-            { title: "Street Fighter 6", genre: "Fighting & Arcade" },
-            { title: "Tekken 8", genre: "Fighting & Arcade" },
-            { title: "Forza Horizon 5", genre: "Racing & Sports" },
-            { title: "Gran Turismo 7", genre: "Racing & Sports" },
-            { title: "Need for Speed Unbound", genre: "Racing & Sports" },
-            { title: "The Last of Us Part I", genre: "Horror & Survival" }
+            { title: "Genshin Impact", genre: "Open World / Adventure" }
         ];
 
-        // Function to display games on the page
         function displayGames(gamesArray) {
             let grid = document.getElementById('gameGrid');
             grid.innerHTML = "";
-
             if (gamesArray.length === 0) {
-                grid.innerHTML = "<p style='color: var(--text-muted);'>No games found matching your search.</p>";
+                grid.innerHTML = "<p style='color: var(--text-muted);'>No games found.</p>";
                 return;
             }
-
             gamesArray.forEach(game => {
                 let card = document.createElement('div');
                 card.className = 'game-card';
@@ -342,7 +718,6 @@
             });
         }
 
-        // Search Function triggered by button
         function filterGames() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let filtered = gamesDatabase.filter(game => 
@@ -352,36 +727,34 @@
             displayGames(filtered);
         }
 
-        // Quiz Recommendation Logic
         function recommendGame() {
             let genre = document.getElementById('genreSelect').value;
             let resultDiv = document.getElementById('quiz-result');
-            resultDiv.innerText = "Showing top picks for " + genre + " in the database above!";
+            resultDiv.innerText = "Showing top picks for " + genre + "!";
+            let filtered = gamesDatabase.filter(game => 
+                game.genre.toLowerCase().includes(genre.toLowerCase())
+            );
+            displayGames(filtered);
         }
 
-        // Review Submission Logic
         function submitReview() {
             let title = document.getElementById('gameTitle').value.trim();
             let text = document.getElementById('reviewText').value.trim();
             let reviewList = document.getElementById('reviewList');
-
             if (title === "" || text === "") {
                 alert("Please fill out both fields!");
                 return;
             }
-
             let newReview = document.createElement('div');
             newReview.className = 'review-item';
             newReview.innerHTML = `<strong>${title}</strong><p>${text}</p>`;
-
             reviewList.prepend(newReview);
-
             document.getElementById('gameTitle').value = "";
             document.getElementById('reviewText').value = "";
         }
 
-        // Initial load to show games when page opens
         window.onload = function() {
+            initActiveGame();
             displayGames(gamesDatabase);
         };
     </script>
