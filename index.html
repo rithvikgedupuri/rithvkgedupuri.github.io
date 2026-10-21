@@ -1,16 +1,9 @@
-Here is the complete, self-contained index.html code block containing all previous functionality along with the requested major upgrades:
-Major Features Added:
- * Web Audio Synthesizer (No external mp3 files required): Real-time 8-bit retro sound effects generated using pure JavaScript Web Audio API (Jumps, Slices, Eats, and Game Over sounds) with an Audio Mute/Unmute Toggle Button in the sticky navbar.
- * Hall of Fame & Achievement Badges: Dedicated Leaderboard section tracking high scores across all 5 minigames with dynamic unlockable badges ("Ninja Master", "Reflex God", "Runner Pro", etc.).
- * Cyberpunk & Theme Switcher: Instant theme switching between Dark Radar, Cyberpunk Neon, and Light Mode.
- * Interactive Game Detail Modals: Tapping any game in your database (PUBG Mobile, Minecraft, Roblox, FC Mobile, etc.) opens a detail modal with platform icons, descriptions, and a direct review shortcut.
- * Live News & Patch Ticker: Animated scrolling news bar right under the header for game updates.
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Radar - Play, Discover & Review Games</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Game Radar v3.0 Mega Update</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -23,6 +16,7 @@ Major Features Added:
             --danger-color: #ef4444;
             --star-color: #f59e0b;
             --canvas-bg: #020617;
+            --xp-color: #a855f7;
         }
 
         body.cyberpunk {
@@ -34,6 +28,7 @@ Major Features Added:
             --text-muted: #a1a1aa;
             --border-color: #27272a;
             --canvas-bg: #050508;
+            --xp-color: #eab308;
         }
 
         body.light {
@@ -45,6 +40,7 @@ Major Features Added:
             --text-muted: #64748b;
             --border-color: #cbd5e1;
             --canvas-bg: #e2e8f0;
+            --xp-color: #7c3aed;
         }
 
         * {
@@ -70,7 +66,7 @@ Major Features Added:
         }
 
         .container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
         }
 
@@ -89,7 +85,7 @@ Major Features Added:
             align-items: center;
             gap: 10px;
             overflow-x: auto;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
         nav.navbar a, nav.navbar button.nav-btn {
@@ -98,7 +94,7 @@ Major Features Added:
             font-size: 0.85rem;
             font-weight: 600;
             white-space: nowrap;
-            padding: 5px 10px;
+            padding: 6px 12px;
             border-radius: 6px;
             background: transparent;
             border: none;
@@ -136,24 +132,50 @@ Major Features Added:
             100% { transform: translate3d(-100%, 0, 0); }
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 20px;
+        /* PLAYER XP PROFILE BANNER */
+        .profile-card {
             background: var(--card-bg);
-            border-radius: 12px;
             border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
-        header h1 {
-            color: var(--accent-color);
-            font-size: 2.2rem;
-            margin-bottom: 5px;
+        .avatar-box {
+            font-size: 2.5rem;
+            background: var(--bg-color);
+            border: 2px solid var(--accent-color);
+            border-radius: 50%;
+            width: 65px;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        header p {
-            color: var(--text-muted);
+        .profile-info {
+            flex: 1;
+        }
+
+        .xp-bar-outer {
+            width: 100%;
+            height: 12px;
+            background: var(--bg-color);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-top: 6px;
+        }
+
+        .xp-bar-inner {
+            height: 100%;
+            background: var(--xp-color);
+            width: 0%;
+            transition: width 0.4s ease;
         }
 
         section {
@@ -208,6 +230,18 @@ Major Features Added:
             border: 2px solid var(--border-color);
         }
 
+        .shake {
+            animation: shake 0.2s ease-in-out;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-5px, 5px); }
+            50% { transform: translate(5px, -5px); }
+            75% { transform: translate(-5px, -5px); }
+            100% { transform: translate(0, 0); }
+        }
+
         canvas {
             display: block;
             width: 100%;
@@ -221,6 +255,7 @@ Major Features Added:
             gap: 10px;
             margin-top: 12px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
         .ctrl-btn {
@@ -232,14 +267,15 @@ Major Features Added:
             font-weight: bold;
             font-size: 1.1rem;
             flex: 1;
-            max-width: 120px;
+            min-width: 90px;
+            max-width: 130px;
             cursor: pointer;
             text-align: center;
         }
 
         .ctrl-btn:active {
             background: var(--accent-color);
-            color: var(--bg-color);
+            color: #0f172a;
         }
 
         /* LEADERBOARD & BADGES */
@@ -318,7 +354,7 @@ Major Features Added:
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 12px;
-            max-height: 300px;
+            max-height: 320px;
             overflow-y: auto;
             padding-right: 5px;
         }
@@ -428,10 +464,10 @@ Major Features Added:
 
         .review-item {
             background: var(--bg-color);
-            padding: 10px 14px;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            margin-top: 8px;
+            margin-top: 10px;
         }
 
         .review-item strong {
@@ -442,6 +478,18 @@ Major Features Added:
             color: var(--star-color);
             font-size: 0.9rem;
             margin-bottom: 4px;
+        }
+
+        .upvote-btn {
+            background: var(--border-color);
+            border: none;
+            color: var(--text-main);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-top: 8px;
+            display: inline-block;
         }
     </style>
 </head>
@@ -462,18 +510,28 @@ Major Features Added:
         <!-- NEWS TICKER -->
         <div class="ticker-wrap">
             <div class="ticker">
-                🔥 PUBG Mobile Season update out now! | 🧱 Minecraft 1.21 update highlights available | ⚽ EA Sports FC Mobile Team of the Season Live! | 👾 Among Us new map updates | 🕹️ Play 5 minigames directly on Game Radar!
+                🚀 Game Radar v3.0 Mega Update is LIVE! | 🛡️ Power-Ups & Combos added to minigames! | ⚡ Earn XP & Rank up your Radar Profile! | 🎮 Try 5 interactive action titles!
             </div>
         </div>
 
-        <header>
-            <h1>📡 Game Radar Hub</h1>
-            <p>Play interactive games, discover top titles & share reviews!</p>
-        </header>
+        <!-- PLAYER XP PROFILE BANNER -->
+        <div class="profile-card">
+            <div class="avatar-box" id="userAvatar">👾</div>
+            <div class="profile-info">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong id="rankTitle" style="color:var(--accent-color); font-size:1.1rem;">Rookie Radar</strong>
+                    <span id="levelBadge" style="font-size:0.85rem; font-weight:bold; color:var(--xp-color);">Level 1</span>
+                </div>
+                <div class="xp-bar-outer">
+                    <div class="xp-bar-inner" id="xpBar"></div>
+                </div>
+                <p id="xpText" style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">0 / 100 XP to next level</p>
+            </div>
+        </div>
 
         <!-- PLAYABLE ARCADE GAMES SECTION -->
         <section id="arcade">
-            <h2>🕹️ Play Action Games Now</h2>
+            <h2>🕹️ Interactive Power-Up Arcade</h2>
             <div class="arcade-selector">
                 <button id="tab-subway" class="arcade-tab active" onclick="switchGame('subway')">Subway Runner</button>
                 <button id="tab-geometry" class="arcade-tab" onclick="switchGame('geometry')">Geometry Dash</button>
@@ -482,7 +540,7 @@ Major Features Added:
                 <button id="tab-snake" class="arcade-tab" onclick="switchGame('snake')">Snake Reflex</button>
             </div>
 
-            <div class="game-screen-wrapper">
+            <div class="game-screen-wrapper" id="canvasWrapper">
                 <canvas id="gameCanvas" width="600" height="320"></canvas>
             </div>
 
@@ -491,7 +549,7 @@ Major Features Added:
 
         <!-- HALL OF FAME LEADERBOARD -->
         <section id="hall">
-            <h2>🏆 Hall of Fame & Achievements</h2>
+            <h2>🏆 Hall of Fame & Badges</h2>
             <div class="leaderboard-grid" id="leaderboardGrid"></div>
         </section>
 
@@ -548,7 +606,7 @@ Major Features Added:
         <section id="vote" style="text-align: center;">
             <h2 style="margin-top: 0;">📊 Cast Your Vote!</h2>
             <p style="color: var(--text-muted); margin-bottom: 12px;">Vote for your favorite game on my official poll:</p>
-            <a href="https://strawpoll.com/poy9k1qOOgJ" target="_blank" style="display: inline-block; background-color: var(--accent-color); color: #0f172a; padding: 10px 20px; text-decoration: none; font-weight: bold; border-radius: 8px;">👉 Click Here to Vote Now! 👈</a>
+            <a href="https://strawpoll.com/poy9k1qOOgJ" target="_blank" onclick="addXP(15)" style="display: inline-block; background-color: var(--accent-color); color: #0f172a; padding: 10px 20px; text-decoration: none; font-weight: bold; border-radius: 8px;">👉 Click Here to Vote Now (+15 XP)! 👈</a>
         </section>
 
         <!-- REVIEWS SECTION -->
@@ -568,7 +626,7 @@ Major Features Added:
 
             <label for="reviewText">Your Review</label>
             <textarea id="reviewText" rows="3" placeholder="Write your review here..."></textarea>
-            <button class="action-btn" onclick="submitReview()">Submit Review</button>
+            <button class="action-btn" onclick="submitReview()">Submit Review (+25 XP)</button>
             <div style="margin-top: 15px;">
                 <h3>Recent Reviews:</h3>
                 <div id="reviewList"></div>
@@ -590,7 +648,32 @@ Major Features Added:
     </div>
 
     <script>
-        /* SOUND SYNTHESIZER (Web Audio API) */
+        /* XP & PROFILE SYSTEM */
+        let userXP = parseInt(localStorage.getItem('userXP')) || 0;
+
+        function addXP(amount) {
+            userXP += amount;
+            localStorage.setItem('userXP', userXP);
+            updateProfileUI();
+        }
+
+        function updateProfileUI() {
+            let level = Math.floor(userXP / 100) + 1;
+            let currentLevelXP = userXP % 100;
+            
+            const titles = ['Rookie Radar', 'Arcade Hunter', 'Reflex Warrior', 'Combo Master', 'Reflex Legend'];
+            const avatars = ['👾', '🕹️', '⚡', '👑', '🔥'];
+
+            let titleIdx = Math.min(titles.length - 1, Math.floor((level - 1) / 2));
+            
+            document.getElementById('rankTitle').innerText = titles[titleIdx];
+            document.getElementById('userAvatar').innerText = avatars[titleIdx];
+            document.getElementById('levelBadge').innerText = `Level ${level}`;
+            document.getElementById('xpBar').style.width = `${currentLevelXP}%`;
+            document.getElementById('xpText').innerText = `${currentLevelXP} / 100 XP to Level ${level + 1}`;
+        }
+
+        /* SOUND SYNTHESIZER */
         let soundEnabled = true;
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         let audioCtx = null;
@@ -603,36 +686,27 @@ Major Features Added:
             const gain = audioCtx.createGain();
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-
             let now = audioCtx.currentTime;
 
             if(type === 'jump') {
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(150, now);
-                osc.frequency.exponentialRampToValueAtTime(400, now + 0.15);
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-                osc.start(now); osc.stop(now + 0.15);
+                osc.type = 'sine'; osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(400, now + 0.12);
+                gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+                osc.start(now); osc.stop(now + 0.12);
+            } else if(type === 'powerup') {
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(300, now);
+                osc.frequency.setValueAtTime(600, now + 0.08); osc.frequency.setValueAtTime(900, now + 0.16);
+                gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.24);
+                osc.start(now); osc.stop(now + 0.24);
             } else if(type === 'slice') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(800, now);
-                osc.frequency.exponentialRampToValueAtTime(200, now + 0.1);
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
-                osc.start(now); osc.stop(now + 0.1);
-            } else if(type === 'eat') {
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(300, now);
-                osc.frequency.setValueAtTime(600, now + 0.08);
-                gain.gain.setValueAtTime(0.3, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
-                osc.start(now); osc.stop(now + 0.15);
+                osc.type = 'sawtooth'; osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(200, now + 0.08);
+                gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+                osc.start(now); osc.stop(now + 0.08);
             } else if(type === 'over') {
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(300, now);
-                osc.frequency.exponentialRampToValueAtTime(80, now + 0.3);
-                gain.gain.setValueAtTime(0.4, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.type = 'square'; osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(60, now + 0.3);
+                gain.gain.setValueAtTime(0.3, now); gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
                 osc.start(now); osc.stop(now + 0.3);
             }
         }
@@ -645,10 +719,16 @@ Major Features Added:
         /* THEME SWITCHER */
         const themes = ['default', 'cyberpunk', 'light'];
         let currentThemeIdx = 0;
-
         function cycleTheme() {
             currentThemeIdx = (currentThemeIdx + 1) % themes.length;
             document.body.className = themes[currentThemeIdx] === 'default' ? '' : themes[currentThemeIdx];
+        }
+
+        /* SCREEN SHAKE */
+        function triggerShake() {
+            const wrapper = document.getElementById('canvasWrapper');
+            wrapper.classList.add('shake');
+            setTimeout(() => wrapper.classList.remove('shake'), 200);
         }
 
         /* HIGH SCORE STORAGE HELPERS */
@@ -659,6 +739,7 @@ Major Features Added:
             let high = getHighScore(game);
             if(score > high) {
                 localStorage.setItem(`highScore_${game}`, score);
+                addXP(Math.min(50, Math.floor(score / 10)));
                 renderLeaderboard();
                 return score;
             }
@@ -667,10 +748,10 @@ Major Features Added:
 
         function renderLeaderboard() {
             const list = [
-                { key: 'subway', name: 'Subway Runner', badgeScore: 1000, badgeName: 'Runner Pro' },
-                { key: 'geometry', name: 'Geometry Dash', badgeScore: 800, badgeName: 'Rhythm Champ' },
+                { key: 'subway', name: 'Subway Runner', badgeScore: 500, badgeName: 'Runner Pro' },
+                { key: 'geometry', name: 'Geometry Dash', badgeScore: 500, badgeName: 'Rhythm Champ' },
                 { key: 'fruit', name: 'Fruit Ninja', badgeScore: 100, badgeName: 'Ninja Master' },
-                { key: 'reflex', name: 'Reflex Dodge', badgeScore: 500, badgeName: 'Reflex God' },
+                { key: 'reflex', name: 'Reflex Dodge', badgeScore: 300, badgeName: 'Reflex God' },
                 { key: 'snake', name: 'Snake Reflex', badgeScore: 100, badgeName: 'Snake King' }
             ];
 
@@ -684,7 +765,7 @@ Major Features Added:
                 card.innerHTML = `
                     <h4>${item.name}</h4>
                     <p style="font-size:0.9rem; color:var(--text-muted);">High Score: <strong style="color:var(--text-main);">${high}</strong></p>
-                    ${hasBadge ? `<span class="badge-pill">🏅 ${item.badgeName}</span>` : `<span class="badge-pill" style="opacity:0.5; filter:grayscale(1);">🔒 Reach ${item.badgeScore} for Badge</span>`}
+                    ${hasBadge ? `<span class="badge-pill">🏅 ${item.badgeName}</span>` : `<span class="badge-pill" style="opacity:0.5; filter:grayscale(1);">🔒 Need ${item.badgeScore} Pts</span>`}
                 `;
                 grid.appendChild(card);
             });
@@ -695,7 +776,7 @@ Major Features Added:
         const ctx = canvas.getContext('2d');
         let currentGame = 'subway';
         let animId = null;
-        let gameState = { score: 0, gameOver: false };
+        let gameState = { score: 0, gameOver: false, shield: false };
         let selectedRating = 5;
 
         function switchGame(gameName) {
@@ -708,10 +789,10 @@ Major Features Added:
         }
 
         /* 1. SUBWAY RUNNER */
-        let subway = { lane: 1, obstacles: [], speed: 4, timer: 0 };
+        let subway = { lane: 1, obstacles: [], powerups: [], speed: 4, timer: 0 };
         function initSubway() {
-            gameState = { score: 0, gameOver: false };
-            subway = { lane: 1, obstacles: [], speed: 4, timer: 0 };
+            gameState = { score: 0, gameOver: false, shield: false };
+            subway = { lane: 1, obstacles: [], powerups: [], speed: 4, timer: 0 };
             document.getElementById('onScreenControls').innerHTML = `
                 <button class="ctrl-btn" onclick="moveSubway(-1)">⬅️ Left</button>
                 <button class="ctrl-btn" onclick="initSubway()">🔄 Restart</button>
@@ -728,29 +809,52 @@ Major Features Added:
         function loopSubway() {
             ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--canvas-bg');
             ctx.fillRect(0, 0, 600, 320);
-            
+
             ctx.strokeStyle = '#334155'; ctx.setLineDash([10, 10]);
             ctx.beginPath(); ctx.moveTo(200, 0); ctx.lineTo(200, 320);
             ctx.moveTo(400, 0); ctx.lineTo(400, 320); ctx.stroke(); ctx.setLineDash([]);
 
             if(!gameState.gameOver) {
                 subway.timer++;
-                if(subway.timer % 40 === 0) {
-                    subway.obstacles.push({ lane: Math.floor(Math.random()*3), y: -40 });
+                if(subway.timer % 35 === 0) {
+                    if(Math.random() < 0.2) subway.powerups.push({ lane: Math.floor(Math.random()*3), y: -40 });
+                    else subway.obstacles.push({ lane: Math.floor(Math.random()*3), y: -40 });
                 }
                 gameState.score++;
 
-                ctx.fillStyle = '#38bdf8';
+                // Player
+                ctx.fillStyle = gameState.shield ? '#f59e0b' : '#38bdf8';
                 ctx.fillRect(subway.lane * 200 + 75, 240, 50, 60);
 
+                // Powerups
+                ctx.fillStyle = '#f59e0b';
+                subway.powerups.forEach(p => {
+                    p.y += subway.speed;
+                    ctx.beginPath(); ctx.arc(p.lane * 200 + 100, p.y, 15, 0, Math.PI * 2); ctx.fill();
+                    if(p.lane === subway.lane && p.y > 220 && p.y < 290) {
+                        gameState.shield = true;
+                        playSound('powerup');
+                        p.y = 400;
+                    }
+                });
+
+                // Obstacles
                 ctx.fillStyle = '#ef4444';
                 subway.obstacles.forEach((obs) => {
                     obs.y += subway.speed;
                     ctx.fillRect(obs.lane * 200 + 60, obs.y, 80, 40);
 
                     if(obs.lane === subway.lane && obs.y > 200 && obs.y < 290) {
-                        gameState.gameOver = true;
-                        playSound('over');
+                        if(gameState.shield) {
+                            gameState.shield = false;
+                            obs.y = 400;
+                            triggerShake();
+                            playSound('slice');
+                        } else {
+                            gameState.gameOver = true;
+                            triggerShake();
+                            playSound('over');
+                        }
                     }
                 });
                 subway.obstacles = subway.obstacles.filter(o => o.y < 350);
@@ -787,7 +891,7 @@ Major Features Added:
 
             if(!gameState.gameOver) {
                 geo.timer++;
-                if(geo.timer % 60 === 0) {
+                if(geo.timer % 50 === 0) {
                     geo.obstacles.push({ x: 600 });
                 }
                 gameState.score++;
@@ -803,13 +907,12 @@ Major Features Added:
                 geo.obstacles.forEach(obs => {
                     obs.x -= 6;
                     ctx.beginPath();
-                    ctx.moveTo(obs.x, 260);
-                    ctx.lineTo(obs.x + 20, 220);
-                    ctx.lineTo(obs.x + 40, 260);
+                    ctx.moveTo(obs.x, 260); ctx.lineTo(obs.x + 20, 220); ctx.lineTo(obs.x + 40, 260);
                     ctx.fill();
 
                     if(obs.x < 110 && obs.x + 30 > 80 && geo.y > 180) {
                         gameState.gameOver = true;
+                        triggerShake();
                         playSound('over');
                     }
                 });
@@ -843,6 +946,7 @@ Major Features Added:
                     f.sliced = true;
                     if(f.bomb) {
                         gameState.gameOver = true;
+                        triggerShake();
                         playSound('over');
                     } else {
                         gameState.score += 10;
@@ -856,7 +960,7 @@ Major Features Added:
             ctx.fillRect(0, 0, 600, 320);
 
             if(!gameState.gameOver) {
-                if(Math.random() < 0.03) {
+                if(Math.random() < 0.04) {
                     fruits.push({
                         x: Math.random() * 500 + 50, y: 320,
                         vx: (Math.random() - 0.5) * 4, vy: - (Math.random() * 4 + 10),
@@ -927,6 +1031,7 @@ Major Features Added:
                     ctx.fillRect(e.x, e.y, 18, 18);
                     if(Math.hypot(e.x - reflex.x, e.y - reflex.y) < 20) {
                         gameState.gameOver = true;
+                        triggerShake();
                         playSound('over');
                     }
                 });
@@ -981,12 +1086,13 @@ Major Features Added:
                         snake.unshift(head);
                         if(head.x === food.x && head.y === food.y) {
                             gameState.score += 10;
-                            playSound('eat');
+                            playSound('powerup');
                             spawnFood();
                         } else {
                             snake.pop();
                         }
                     } else {
+                        triggerShake();
                         playSound('over');
                     }
                 }
@@ -1009,11 +1115,15 @@ Major Features Added:
             let high = getHighScore(game);
             ctx.fillStyle = '#fff'; ctx.font = '16px sans-serif';
             ctx.fillText(`Score: ${gameState.score} | High: ${high}`, 15, 25);
+            if(gameState.shield) {
+                ctx.fillStyle = '#f59e0b';
+                ctx.fillText(`🛡️ SHIELD ACTIVE`, 440, 25);
+            }
         }
 
         function drawGameOver(game) {
             let best = saveHighScore(game, gameState.score);
-            ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+            ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
             ctx.fillRect(0, 0, 600, 320);
             ctx.fillStyle = '#ef4444'; ctx.font = 'bold 28px sans-serif';
             ctx.fillText('GAME OVER!', 220, 140);
@@ -1124,6 +1234,7 @@ Major Features Added:
             let genre = document.getElementById('genreSelect').value;
             let resultDiv = document.getElementById('quiz-result');
             resultDiv.innerText = "Showing top picks for " + genre + "!";
+            addXP(10);
             filterByTag(genre);
             document.getElementById('search').scrollIntoView({ behavior: 'smooth' });
         }
@@ -1151,7 +1262,7 @@ Major Features Added:
             document.getElementById('reviews').scrollIntoView({ behavior: 'smooth' });
         }
 
-        /* REVIEWS WITH STAR RATINGS & LOCAL STORAGE */
+        /* REVIEWS WITH UPVOTES & LOCAL STORAGE */
         function setRating(r) {
             selectedRating = r;
             let stars = document.querySelectorAll('#starSelect span');
@@ -1162,7 +1273,7 @@ Major Features Added:
 
         function loadReviews() {
             let saved = JSON.parse(localStorage.getItem('gameReviews')) || [
-                { title: "Minecraft", text: "Infinite creativity and survival fun!", stars: 5 }
+                { id: 1, title: "Minecraft", text: "Infinite creativity and survival fun!", stars: 5, votes: 12 }
             ];
             let list = document.getElementById('reviewList');
             list.innerHTML = "";
@@ -1173,9 +1284,20 @@ Major Features Added:
                     <div class="review-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</div>
                     <strong>${r.title}</strong>
                     <p>${r.text}</p>
+                    <button class="upvote-btn" onclick="upvoteReview(${r.id})">👍 Helpful (${r.votes || 0})</button>
                 `;
                 list.appendChild(div);
             });
+        }
+
+        function upvoteReview(id) {
+            let saved = JSON.parse(localStorage.getItem('gameReviews')) || [];
+            let r = saved.find(item => item.id === id);
+            if(r) {
+                r.votes = (r.votes || 0) + 1;
+                localStorage.setItem('gameReviews', JSON.stringify(saved));
+                loadReviews();
+            }
         }
 
         function submitReview() {
@@ -1187,9 +1309,10 @@ Major Features Added:
             }
 
             let saved = JSON.parse(localStorage.getItem('gameReviews')) || [];
-            saved.unshift({ title, text, stars: selectedRating });
+            saved.unshift({ id: Date.now(), title, text, stars: selectedRating, votes: 1 });
             localStorage.setItem('gameReviews', JSON.stringify(saved));
 
+            addXP(25);
             document.getElementById('gameTitle').value = "";
             document.getElementById('reviewText').value = "";
             setRating(5);
@@ -1198,6 +1321,7 @@ Major Features Added:
 
         /* INITIAL LOAD */
         window.onload = function() {
+            updateProfileUI();
             initActiveGame();
             renderLeaderboard();
             displayGames(gamesDatabase);
@@ -1207,4 +1331,3 @@ Major Features Added:
     </script>
 </body>
 </html>
-
