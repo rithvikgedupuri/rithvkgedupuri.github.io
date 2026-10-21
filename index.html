@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Game Radar v3.0 Mega Update</title>
+    <title>Game Radar v4.0 Ultimate Edition</title>
     <style>
+        /* --- 5 DISTINCT THEMES --- */
         :root {
             --bg-color: #0f172a;
             --card-bg: #1e293b;
@@ -41,6 +42,30 @@
             --border-color: #cbd5e1;
             --canvas-bg: #e2e8f0;
             --xp-color: #7c3aed;
+        }
+
+        body.synthwave {
+            --bg-color: #1a0b2e;
+            --card-bg: #281245;
+            --accent-color: #f43f5e;
+            --accent-hover: #e11d48;
+            --text-main: #fdf4ff;
+            --text-muted: #c084fc;
+            --border-color: #581c87;
+            --canvas-bg: #0f051d;
+            --xp-color: #facc15;
+        }
+
+        body.matrix {
+            --bg-color: #021206;
+            --card-bg: #05210c;
+            --accent-color: #22c55e;
+            --accent-hover: #16a34a;
+            --text-main: #f0fdf4;
+            --text-muted: #4ade80;
+            --border-color: #14532d;
+            --canvas-bg: #010a03;
+            --xp-color: #f59e0b;
         }
 
         * {
@@ -503,14 +528,14 @@
         <a href="#quiz">🎮 Quiz</a>
         <a href="#reviews">✍️ Reviews</a>
         <button class="nav-btn" onclick="toggleAudio()" id="audioToggleBtn">🔊 Sound: ON</button>
-        <button class="nav-btn" onclick="cycleTheme()" id="themeToggleBtn">🎨 Theme</button>
+        <button class="nav-btn" onclick="cycleTheme()" id="themeToggleBtn">🎨 Theme: Dark</button>
     </nav>
 
     <div class="container">
         <!-- NEWS TICKER -->
         <div class="ticker-wrap">
             <div class="ticker">
-                🚀 Game Radar v3.0 Mega Update is LIVE! | 🛡️ Power-Ups & Combos added to minigames! | ⚡ Earn XP & Rank up your Radar Profile! | 🎮 Try 5 interactive action titles!
+                🚀 Game Radar v4.0 Ultimate Edition is LIVE! | 🎨 5 Unique Themes Enabled! | 🛡️ Power-Ups & Shields ready in minigames! | ⚡ Gain XP and level up your Profile!
             </div>
         </div>
 
@@ -716,12 +741,15 @@
             document.getElementById('audioToggleBtn').innerText = soundEnabled ? '🔊 Sound: ON' : 'Mute: OFF';
         }
 
-        /* THEME SWITCHER */
-        const themes = ['default', 'cyberpunk', 'light'];
+        /* 5 THEMES SWITCHER ENGINE */
+        const themes = ['default', 'cyberpunk', 'light', 'synthwave', 'matrix'];
+        const themeLabels = ['Dark', 'Cyberpunk', 'Light', 'Synthwave', 'Matrix'];
         let currentThemeIdx = 0;
+
         function cycleTheme() {
             currentThemeIdx = (currentThemeIdx + 1) % themes.length;
             document.body.className = themes[currentThemeIdx] === 'default' ? '' : themes[currentThemeIdx];
+            document.getElementById('themeToggleBtn').innerText = `🎨 Theme: ${themeLabels[currentThemeIdx]}`;
         }
 
         /* SCREEN SHAKE */
